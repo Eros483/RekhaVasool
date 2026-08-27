@@ -10,11 +10,13 @@ import time
 
 from utils.config import settings
 
-RECOVERY_CONTACT = settings.wa_to or "+91-9560452773"  # whitelisted test number (spec §6) — autoconfigured from WA_TO env
+RECOVERY_CONTACT = (
+    settings.wa_to or "+91-9560452773"
+)  # whitelisted test number (spec §6) — autoconfigured from WA_TO env
 MAX_ATTEMPTS = 2
 MAX_WA_SENT = 1
 RETRY_DELAY_SECONDS = 45
-LINK_EXPIRE_MINUTES = 15
+LINK_EXPIRE_MINUTES = 16  # spec says 15m; Razorpay requires >15m
 RECOVERY_DB = "recovery.db"
 
 _SCHEMA = """

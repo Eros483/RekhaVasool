@@ -19,7 +19,7 @@ from utils.config import settings
 
 AUDIT_FILE = "audit.jsonl"
 CUSTOMER_CONTACT = "+919560452773"  # whitelisted test number (spec §6)
-LINK_EXPIRE_SECONDS = 15 * 60  # expire_by = now + 15m (spec §5.8)
+LINK_EXPIRE_SECONDS = 16 * 60  # expire_by = now + 16m (spec §5.8 says 15m; Razorpay requires >15m)
 
 # is_injected blocklist — regex first, must block the §7 attack set alone
 # (GEMINI_ENABLED=false). Over-matching is fine: fail-closed.
