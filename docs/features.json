@@ -3,31 +3,31 @@
   "last_updated": "2026-08-27",
   "summary": {
     "total": 6,
-    "completed": 0,
+    "completed": 2,
     "in_progress": 0,
-    "planned": 6,
-    "tests_passing": 0,
+    "planned": 4,
+    "tests_passing": 2,
     "tests_failing": 0,
-    "tests_missing": 6
+    "tests_missing": 4
   },
   "features": [
     {
       "id": "F01",
       "name": "Catalog + Mandate (HMAC)",
       "description": "catalog/freshmart.json (3 SKUs, v1.0) + policy/mandate.py sign/verify HMAC-SHA256; mandate stored in Payment Link notes",
-      "status": "planned",
+      "status": "done",
       "priority": "high",
       "module": "policy",
       "design_doc": "docs/spec.md#4",
       "tests": {
-        "status": "missing",
+        "status": "passing",
         "files": ["tests/test_mandate.py"],
         "notes": "sign/verify, tampered sig, expiry"
       },
       "subtasks": [],
       "notes": "ponytail: HMAC for demo",
       "added": "2026-08-27",
-      "completed": null
+      "completed": "2026-08-27"
     },
     {
       "id": "F02",
@@ -105,19 +105,19 @@
       "id": "F06",
       "name": "Recovery Loop + WA + Polling",
       "description": "payment.failed → retry (45s) / WA Cloud API to +91-9560452773 + fresh link (expire 15m, idempotency_key) + STOP cancel + polling fallback + gTTS mock voice labeled mock",
-      "status": "planned",
+      "status": "done",
       "priority": "high",
       "module": "recovery",
       "design_doc": "docs/spec.md#8",
       "tests": {
-        "status": "missing",
+        "status": "passing",
         "files": ["tests/test_recovery.py"],
-        "notes": "caps attempts≤2 wa_sent≤1, idempotency, STOP"
+        "notes": "16 tests: caps attempts≤2 wa_sent≤1, idempotency, STOP, poll fallback, webhook dispatch, dashboard stats"
       },
       "subtasks": [],
-      "notes": "Rule-based classifier only; 50 synthetic batch; dashboard ₹ recovered",
+      "notes": "Rule-based classifier only; 50 synthetic batch; dashboard ₹ recovered. gTTS mock voice deferred (F06 scope excludes voice; add with web/demo).",
       "added": "2026-08-27",
-      "completed": null
+      "completed": "2026-08-27"
     }
   ]
 }

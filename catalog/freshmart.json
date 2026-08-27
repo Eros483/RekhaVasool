@@ -1,0 +1,9 @@
+{
+  "merchant": "freshmart",
+  "catalog_version": "1.0",
+  "skus": [
+    {"sku": "sony_ch510", "name": "Sony WH-CH510", "price": 499900, "currency": "INR", "category": "electronics", "nc": true, "policy": "return_7d", "desc": "Noise cancelling, 35h battery"},
+    {"sku": "boat_450", "name": "boAt Rockerz 450", "price": 199900, "currency": "INR", "category": "electronics", "nc": false, "desc": "40mm drivers"},
+    {"sku": "jbl_tune", "name": "JBL Tune 710BT", "price": 650000, "currency": "INR", "category": "electronics", "nc": true, "desc": "Over-ear, 50h"}
+  ]
+}

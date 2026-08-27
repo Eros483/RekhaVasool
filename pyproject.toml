@@ -13,6 +13,9 @@ dependencies = [
   "gTTS>=2.5",
 ]
 
+[tool.pytest.ini_options]
+pythonpath = ["."]
+
 [tool.black]
 line-length = 100
 
