@@ -14,6 +14,10 @@ class Settings(BaseSettings):
     wa_phone_id: str = ""
     wa_token: str = ""
     wa_to: str = "+919560452773"
+    twilio_account_sid: str = ""
+    twilio_auth_token: str = ""
+    twilio_phone_number: str = ""
+    sarvam_api_key: str = ""
 
 
 settings = Settings()

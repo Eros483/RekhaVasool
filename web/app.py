@@ -191,6 +191,25 @@ def poll(link_id: str):
     return JSONResponse(result)
 
 
+@app.post("/voice-dial", response_class=JSONResponse)
+async def voice_dial(request: Request):
+    """Live Pipecat voice — Twilio → Sarvam Bulbul → Gemini, 45s 2-turn, 2-min cap."""
+    body = (await request.body()).decode()
+    qs = parse_qs(body)
+    to = qs.get("to", [settings.wa_to])[0]
+    try:
+        from voice.agent import dial
+
+        # 2-min timeout wrapper
+        import asyncio
+
+        result = await asyncio.wait_for(asyncio.to_thread(dial, to), timeout=120)
+        return JSONResponse({"status": "dialed", "to": to, "sid": result.get("sid")})
+    except Exception as e:  # noqa: BLE001
+        logger.error("voice dial failed %s", e)
+        return JSONResponse({"error": str(e)}, status_code=500)
+
+
 @app.get("/voice", response_class=FileResponse)
 def voice(text: str = "Payment recovered"):
     """gTTS on-demand — 0 bytes in repo, labeled mock — live via Sarvam+Exotel in prod."""

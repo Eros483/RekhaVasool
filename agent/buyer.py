@@ -77,10 +77,9 @@ def _rule_based(user_text: str, catalog: dict) -> dict | None:
 
 
 def _gemini_intent(user_text: str, catalog: dict) -> dict:
-    """Gemini 2.0 Flash → intent. Output is UNTRUSTED: `buy` validates it."""
-    from google import genai
+    """Gemini → intent. Output is UNTRUSTED: `buy` validates it."""
+    from utils.llm import generate_with_fallback
 
-    client = genai.Client(api_key=settings.gemini_api_key)
     prompt = (
         "You are a buyer agent for merchant 'freshmart'. Choose one SKU from this "
         "catalog that best matches the user's request, and reply as JSON ONLY with "
@@ -88,7 +87,7 @@ def _gemini_intent(user_text: str, catalog: dict) -> dict:
         f"catalog: {json.dumps([s['sku'] for s in catalog['skus']])}\n"
         f"user: {user_text}"
     )
-    resp = client.models.generate_content(model="gemini-2.5-flash", contents=prompt)
+    resp, _ = generate_with_fallback(prompt)
     text = (getattr(resp, "text", "") or "").strip()
     # strip code fences, take first balanced {...}
     m = re.search(r"\{.*\}", text, re.DOTALL)
