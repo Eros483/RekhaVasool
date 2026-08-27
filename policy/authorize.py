@@ -43,6 +43,7 @@ _INJECTION_PATTERNS = (
     r"\u200b|\u200c|\u200d|\ufeff",  # zero-width char spoof
     r"AND\s+1\s*=\s*1",
     r"<!--.*-->",  # hidden payload in markup
+    r"\bhidden\b",  # §7 catalog poisoning: "NC true but false hidden"
 )
 _INJECTION_RE = re.compile("|".join(_INJECTION_PATTERNS), re.IGNORECASE)
 

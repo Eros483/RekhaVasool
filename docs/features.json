@@ -3,12 +3,12 @@
   "last_updated": "2026-08-27",
 "summary": {
     "total": 6,
-    "completed": 3,
+    "completed": 6,
     "in_progress": 0,
-    "planned": 3,
-    "tests_passing": 3,
+    "planned": 0,
+    "tests_passing": 6,
     "tests_failing": 0,
-    "tests_missing": 3
+    "tests_missing": 0
   },
   "features": [
     {
@@ -51,19 +51,19 @@
       "id": "F03",
       "name": "Buyer Agent (Gemini + MCP)",
       "description": "agent/buyer.py emits {sku,qty,merchant,raw_text} only; inline MCP config to Razorpay @razorpay/mcp create_payment_link with canonical price",
-      "status": "planned",
+      "status": "done",
       "priority": "high",
       "module": "agent",
       "design_doc": "docs/spec.md#3.1",
       "tests": {
-        "status": "missing",
+        "status": "passing",
         "files": ["tests/test_buyer.py"],
-        "notes": "mock Gemini, no amount trusted"
+        "notes": "8 tests: rule-based fallback (no LLM), Gemini output parsed but amount stripped, non-canonical SKU dropped, Gemini failure falls back to rules"
       },
       "subtasks": [],
-      "notes": "Inline MCP config at agent/buyer.py:12",
+      "notes": "Inline MCP config comment at agent/buyer.py:12; buyer picks SKU (authorize F02 blocks amount>max); canonical price only.",
       "added": "2026-08-27",
-      "completed": null
+      "completed": "2026-08-27"
     },
     {
       "id": "F04",
@@ -87,19 +87,19 @@
       "id": "F05",
       "name": "Red-Team Harness 20/20",
       "description": "tests/redteam.jsonl (5×4) + tests/harness.py runner; 20/20 blocked with GEMINI_ENABLED=false",
-      "status": "planned",
+      "status": "done",
       "priority": "high",
       "module": "tests",
       "design_doc": "docs/spec.md#7",
       "tests": {
-        "status": "missing",
+        "status": "passing",
         "files": ["tests/harness.py", "tests/redteam.jsonl"],
-        "notes": "pytest tests/harness.py -v in video"
+        "notes": "21 tests (20 attacks + summary print); 20/20 blocked with GEMINI_ENABLED=false; pytest python_files includes harness.py so `make test` runs it too"
       },
       "subtasks": [],
-      "notes": "Honesty: 100% on declared harness, not absolute",
+      "notes": "Honesty: 100% on declared harness, not absolute. catalog_04 ('NC true but false hidden') required adding `\\bhidden\\b` to is_injected blocklist in policy/authorize.py.",
       "added": "2026-08-27",
-      "completed": null
+      "completed": "2026-08-27"
     },
     {
       "id": "F06",

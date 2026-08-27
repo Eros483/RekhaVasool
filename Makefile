@@ -24,8 +24,8 @@ clean: ## rm -rf __pycache__ .pytest_cache audit.jsonl recovery.db logs/
 	find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
 	find . -type d -name .pytest_cache -exec rm -rf {} + 2>/dev/null || true
 
-harness: ## GEMINI_ENABLED=false pytest tests/harness.py -v
-	GEMINI_ENABLED=false uv run pytest tests/harness.py -v
+harness: ## GEMINI_ENABLED=false pytest tests/harness.py -v (20/20 + summary print)
+	GEMINI_ENABLED=false uv run pytest tests/harness.py -v -s
 
 help: ## show help
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-12s\033[0m %s\n", $$1, $$2}'
