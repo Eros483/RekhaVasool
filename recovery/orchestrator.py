@@ -10,7 +10,7 @@ import time
 
 from utils.config import settings
 
-RECOVERY_CONTACT = "+91-9560452773"  # whitelisted test number (spec §6)
+RECOVERY_CONTACT = settings.wa_to or "+91-9560452773"  # whitelisted test number (spec §6) — autoconfigured from WA_TO env
 MAX_ATTEMPTS = 2
 MAX_WA_SENT = 1
 RETRY_DELAY_SECONDS = 45

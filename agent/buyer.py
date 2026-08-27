@@ -51,7 +51,7 @@ def _gemini_intent(user_text: str, catalog: dict) -> dict:
     import google.generativeai as genai
 
     genai.configure(api_key=settings.gemini_api_key)
-    model = genai.GenerativeModel("gemini-2.0-flash")
+    model = genai.GenerativeModel("gemini-2.5-flash")
     prompt = (
         "You are a buyer agent for merchant 'freshmart'. Choose one SKU from this "
         "catalog that best matches the user's request, and reply as JSON ONLY with "

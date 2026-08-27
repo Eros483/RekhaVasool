@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     gemini_enabled: bool = False
     wa_phone_id: str = ""
     wa_token: str = ""
+    wa_to: str = "+919560452773"
 
 
 settings = Settings()
