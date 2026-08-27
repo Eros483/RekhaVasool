@@ -1,0 +1,123 @@
+{
+  "project": "RekhaVasool",
+  "last_updated": "2026-08-27",
+  "summary": {
+    "total": 6,
+    "completed": 0,
+    "in_progress": 0,
+    "planned": 6,
+    "tests_passing": 0,
+    "tests_failing": 0,
+    "tests_missing": 6
+  },
+  "features": [
+    {
+      "id": "F01",
+      "name": "Catalog + Mandate (HMAC)",
+      "description": "catalog/freshmart.json (3 SKUs, v1.0) + policy/mandate.py sign/verify HMAC-SHA256; mandate stored in Payment Link notes",
+      "status": "planned",
+      "priority": "high",
+      "module": "policy",
+      "design_doc": "docs/spec.md#4",
+      "tests": {
+        "status": "missing",
+        "files": ["tests/test_mandate.py"],
+        "notes": "sign/verify, tampered sig, expiry"
+      },
+      "subtasks": [],
+      "notes": "ponytail: HMAC for demo",
+      "added": "2026-08-27",
+      "completed": null
+    },
+    {
+      "id": "F02",
+      "name": "Policy Engine authorize()",
+      "description": "8 checks in spec §5 order; is_injected regex-first + Gemini optional (2s timeout); every branch → audit.jsonl hash chain",
+      "status": "planned",
+      "priority": "high",
+      "module": "policy",
+      "design_doc": "docs/spec.md#5",
+      "tests": {
+        "status": "missing",
+        "files": ["tests/test_authorize.py"],
+        "notes": "all DENIED reasons + PAID; boundary 500000/500001"
+      },
+      "subtasks": [],
+      "notes": "",
+      "added": "2026-08-27",
+      "completed": null
+    },
+    {
+      "id": "F03",
+      "name": "Buyer Agent (Gemini + MCP)",
+      "description": "agent/buyer.py emits {sku,qty,merchant,raw_text} only; inline MCP config to Razorpay @razorpay/mcp create_payment_link with canonical price",
+      "status": "planned",
+      "priority": "high",
+      "module": "agent",
+      "design_doc": "docs/spec.md#3.1",
+      "tests": {
+        "status": "missing",
+        "files": ["tests/test_buyer.py"],
+        "notes": "mock Gemini, no amount trusted"
+      },
+      "subtasks": [],
+      "notes": "Inline MCP config at agent/buyer.py:12",
+      "added": "2026-08-27",
+      "completed": null
+    },
+    {
+      "id": "F04",
+      "name": "Web (catalog + approve + audit + dashboard)",
+      "description": "FastAPI + Jinja: catalog view, Approve Mandate (₹5k/15m JWT), audit view, /dashboard from recovery.db",
+      "status": "planned",
+      "priority": "high",
+      "module": "web",
+      "design_doc": "docs/spec.md#3.1",
+      "tests": {
+        "status": "missing",
+        "files": ["tests/test_web.py"],
+        "notes": "approve flow, dashboard counters"
+      },
+      "subtasks": [],
+      "notes": "",
+      "added": "2026-08-27",
+      "completed": null
+    },
+    {
+      "id": "F05",
+      "name": "Red-Team Harness 20/20",
+      "description": "tests/redteam.jsonl (5×4) + tests/harness.py runner; 20/20 blocked with GEMINI_ENABLED=false",
+      "status": "planned",
+      "priority": "high",
+      "module": "tests",
+      "design_doc": "docs/spec.md#7",
+      "tests": {
+        "status": "missing",
+        "files": ["tests/harness.py", "tests/redteam.jsonl"],
+        "notes": "pytest tests/harness.py -v in video"
+      },
+      "subtasks": [],
+      "notes": "Honesty: 100% on declared harness, not absolute",
+      "added": "2026-08-27",
+      "completed": null
+    },
+    {
+      "id": "F06",
+      "name": "Recovery Loop + WA + Polling",
+      "description": "payment.failed → retry (45s) / WA Cloud API to +91-9560452773 + fresh link (expire 15m, idempotency_key) + STOP cancel + polling fallback + gTTS mock voice labeled mock",
+      "status": "planned",
+      "priority": "high",
+      "module": "recovery",
+      "design_doc": "docs/spec.md#8",
+      "tests": {
+        "status": "missing",
+        "files": ["tests/test_recovery.py"],
+        "notes": "caps attempts≤2 wa_sent≤1, idempotency, STOP"
+      },
+      "subtasks": [],
+      "notes": "Rule-based classifier only; 50 synthetic batch; dashboard ₹ recovered",
+      "added": "2026-08-27",
+      "completed": null
+    }
+  ]
+}
