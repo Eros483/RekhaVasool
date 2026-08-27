@@ -198,10 +198,10 @@ async def voice_dial(request: Request):
     qs = parse_qs(body)
     to = qs.get("to", [settings.wa_to])[0]
     try:
-        from voice.agent import dial
-
         # 2-min timeout wrapper
         import asyncio
+
+        from voice.agent import dial
 
         result = await asyncio.wait_for(asyncio.to_thread(dial, to), timeout=120)
         return JSONResponse({"status": "dialed", "to": to, "sid": result.get("sid")})

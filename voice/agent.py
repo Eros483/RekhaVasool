@@ -8,7 +8,6 @@ voice_to == wa_to (whitelisted +91-9560452773).
 """
 
 import asyncio
-import json
 
 from utils.config import settings
 from utils.logger import get_logger
@@ -60,7 +59,9 @@ async def _twilio_dial(to: str, twiml_url: str | None = None, timeout: int = VOI
     # Pipecat live path would be: Url=twiml_url, Method=POST (WebSocket stream)
     # ponytail: Twiml inline is enough for mock; switch to Url when pipecat server is deployed
     async with httpx.AsyncClient(timeout=timeout) as client:
-        r = await client.post(url, data=data, auth=(settings.twilio_account_sid, settings.twilio_auth_token))
+        r = await client.post(
+            url, data=data, auth=(settings.twilio_account_sid, settings.twilio_auth_token)
+        )
         r.raise_for_status()
         return r.json()
 
@@ -79,8 +80,8 @@ def dial(to: str | None = None, order_context: dict | None = None):
         try:
             # Prove pipecat is wired (no manual STT/TTS wiring — pipecat handles it)
             from pipecat.serializers.twilio import TwilioFrameSerializer  # noqa: F401
-            from pipecat.services.sarvam import SarvamSTTService, SarvamTTSService  # noqa: F401
             from pipecat.services.google import GoogleLLMService  # noqa: F401
+            from pipecat.services.sarvam import SarvamSTTService, SarvamTTSService  # noqa: F401
 
             logger.info("pipecat imports ok — serializer + Sarvam Bulbul + Gemini wired")
         except Exception as e:  # noqa: BLE001
@@ -103,8 +104,8 @@ def dial(to: str | None = None, order_context: dict | None = None):
                     "mandate_id": order_context.get("mandate_id"),
                 }
             )
-        except Exception:
-            pass
+        except Exception as e:  # noqa: BLE001 — audit best-effort
+            logger.info("voice audit failed %s", e)
         return result
 
     return asyncio.run(asyncio.wait_for(_run(), timeout=VOICE_TIMEOUT))
@@ -119,7 +120,10 @@ def handle_resend_wa_link(original_payment_id: str, amount_paise: int = 499900):
     # find latest link for this order
     row = store.latest(original_payment_id)
     short_url = row["short_url"] if row else "https://rzp.io/pending"
-    orch.send_wa(settings.wa_to, f"Tap to retry ₹{amount_paise/100:,.0f} for Sony ({short_url}) — reply STOP to opt out")
+    orch.send_wa(
+        settings.wa_to,
+        f"Tap to retry ₹{amount_paise/100:,.0f} for Sony ({short_url}) — reply STOP to opt out",
+    )
     return {"status": "resent", "to": settings.wa_to}
 
 

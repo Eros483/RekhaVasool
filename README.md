@@ -82,7 +82,7 @@ Create `.env` from `.env.example`. `voice_to` is `WA_TO` — no separate var.
 | Service | Env Vars | Where to get |
 |---------|----------|--------------|
 | **Razorpay** | `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET` | Razorpay Dashboard → API Keys → Generate test keys |
-| **Gemini** | `GEMINI_API_KEY`, `GEMINI_ENABLED` | aistudio.google.com → Get API key — fallback tries `3.7-flash → 3.6-flash → 3.5-flash → 3.5-flash-lite → 3.1-flash-lite → 2.5-flash → 2.5-flash-lite → flash-latest` on 429 (all free-tier, rate-limited) |
+| **Gemini** | `GEMINI_API_KEY`, `GEMINI_ENABLED` | aistudio.google.com → Get API key — fallback tries `3.6-flash → 3.5-flash → 3.5-flash-lite → 3.1-flash-lite → 2.5-flash → 2.5-flash-lite → flash-latest` on 429 (all free-tier, rate-limited) |
 | **Mandate signing** | `MANDATE_SECRET` | Generate locally with `openssl rand -hex 32` |
 | **WhatsApp** | `WA_PHONE_ID`, `WA_TOKEN`, `WA_TO` | Meta Developers → WhatsApp test number — whitelist +91-9560452773 |
 | **Twilio Voice** | `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_PHONE_NUMBER` | console.twilio.com → `ACd5...`, `+12237588730` |

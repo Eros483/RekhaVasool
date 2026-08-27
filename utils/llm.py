@@ -5,9 +5,8 @@ from utils.logger import get_logger
 
 logger = get_logger(__name__)
 
-# curl-verified free-tier models that support generateContent (newest first)
+# curl-verified free-tier models that support generateContent (newest first) — 3.7 removed (unreliable)
 _FALLBACK_MODELS = [
-    "gemini-3.7-flash",
     "gemini-3.6-flash",
     "gemini-3.5-flash",
     "gemini-3.5-flash-lite",
@@ -34,7 +33,7 @@ def generate_with_fallback(prompt: str, timeout: float = 120):
                 logger.info("gemini model=%s ok", model)
                 return resp, model
             last_err = ValueError(f"empty response from {model}")
-        except Exception as e:  # noqa: BLE001
+        except Exception as e:
             msg = str(e)
             # 400 / INVALID_ARGUMENT → bad prompt, don't retry
             if "400" in msg or "INVALID_ARGUMENT" in msg:

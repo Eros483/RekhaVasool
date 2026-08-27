@@ -1,5 +1,7 @@
 import pytest
+
 from utils.config import settings
+
 
 @pytest.fixture(autouse=True)
 def _force_gemini_off_for_harness(monkeypatch):
