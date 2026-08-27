@@ -35,12 +35,15 @@ flowchart LR
     G -->|Paid| H[Dashboard]
     G -->|Failed| I[Recovery]
     I --> J[WhatsApp Nudge]
+    J --> K[Voice Agent 45s]
+    K -->|haan / STOP| J
+    K --> F
     J --> F
     I --> H
     E --> H
 ```
 
-**In words:** You approve a Rs 5,000 mandate once. The AI agent only proposes a product. The policy engine checks signature, expiry, allowlist, catalog version, price, and injection — in that order. Only then is a Razorpay Payment Link created at the catalog price. Every decision is written to an audit log. If the payment fails, we retry once, then nudge you on WhatsApp with a fresh link. Reply STOP and we cancel and stop.
+**In words:** You approve a Rs 5,000 mandate once. The AI agent only proposes a product. The policy engine checks signature, expiry, allowlist, catalog version, price, and injection — in that order. Only then is a Razorpay Payment Link created at the catalog price. Every decision is written to an audit log. If the payment fails, we retry once, then nudge you on WhatsApp with a fresh link. If that caps, a live voice agent calls for 45s (2 turns max) to resend the link or handle STOP. Reply STOP and we cancel and stop.
 
 ## What we prove
 
