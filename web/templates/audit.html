@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Audit — RekhaVasool{% endblock %}
+{% block content %}
+<div class="card">
+  <h1>Audit Trail <span class="muted">audit.jsonl — append-only, hash-chained</span></h1>
+  {% if not entries %}
+    <p>No audit entries yet.</p>
+  {% else %}
+    <table>
+      <tr><th>#</th><th>ts</th><th>decision</th><th>reason</th><th>intent</th><th>amount</th><th>payment_link_id</th><th>source</th><th>chain</th></tr>
+      {% for e in entries %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ e.ts }}</td>
+        <td><strong>{{ e.decision }}</strong></td>
+        <td>{{ e.reason or "" }}</td>
+        <td>{{ e.intent.sku if e.intent else "" }} ×{{ e.intent.qty if e.intent and e.intent.qty else "" }}</td>
+        <td>{{ e.canonical_price | inr if e.canonical_price else "" }}</td>
+        <td><code>{{ e.payment_link_id or "" }}</code></td>
+        <td>{{ e.source or "" }}</td>
+        <td><span class="{{ 'ok' if e._chain_ok else 'bad' }}">{{ "ok" if e._chain_ok else "broken" }}</span></td>
+      </tr>
+      {% endfor %}
+    </table>
+    <p class="muted">Each line's <code>prev_hash = sha256(previous raw line)</code> — a broken link means tampering.</p>
+  {% endif %}
+</div>
+{% endblock %}

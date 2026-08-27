@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — RekhaVasool{% endblock %}
+{% block content %}
+<div class="card">
+  <h1>Recovery Dashboard <span class="muted">live from recovery.db</span></h1>
+  <div class="grid">
+    <div class="stat"><div class="num">{{ stats.total_failed }}</div><div class="lbl">Total failed</div></div>
+    <div class="stat"><div class="num">{{ stats.retried }}</div><div class="lbl">Retried</div></div>
+    <div class="stat"><div class="num">{{ stats.wa_sent }}</div><div class="lbl">WA sent</div></div>
+    <div class="stat"><div class="num">{{ stats.recovered }}</div><div class="lbl">Recovered</div></div>
+    <div class="stat"><div class="num">{{ stats.amount_recovered_paise | inr }}</div><div class="lbl">₹ recovered</div></div>
+  </div>
+</div>
+{% endblock %}

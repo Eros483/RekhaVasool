@@ -1,14 +1,14 @@
 {
   "project": "RekhaVasool",
   "last_updated": "2026-08-27",
-  "summary": {
+"summary": {
     "total": 6,
-    "completed": 2,
+    "completed": 3,
     "in_progress": 0,
-    "planned": 4,
-    "tests_passing": 2,
+    "planned": 3,
+    "tests_passing": 3,
     "tests_failing": 0,
-    "tests_missing": 4
+    "tests_missing": 3
   },
   "features": [
     {
@@ -33,19 +33,19 @@
       "id": "F02",
       "name": "Policy Engine authorize()",
       "description": "8 checks in spec §5 order; is_injected regex-first + Gemini optional (2s timeout); every branch → audit.jsonl hash chain",
-      "status": "planned",
+      "status": "done",
       "priority": "high",
       "module": "policy",
       "design_doc": "docs/spec.md#5",
       "tests": {
-        "status": "missing",
+        "status": "passing",
         "files": ["tests/test_authorize.py"],
-        "notes": "all DENIED reasons + PAID; boundary 500000/500001"
+        "notes": "30 tests: all DENIED reasons + PAID; boundary 500000/500001; audit hash chain; Gemini second-opinion paths"
       },
       "subtasks": [],
-      "notes": "",
+      "notes": "Gemini 2s timeout via request_options; failure defaults to regex result. is_injected regex covers §7 attack set (passes with GEMINI_ENABLED=false).",
       "added": "2026-08-27",
-      "completed": null
+      "completed": "2026-08-27"
     },
     {
       "id": "F03",
@@ -69,19 +69,19 @@
       "id": "F04",
       "name": "Web (catalog + approve + audit + dashboard)",
       "description": "FastAPI + Jinja: catalog view, Approve Mandate (₹5k/15m JWT), audit view, /dashboard from recovery.db",
-      "status": "planned",
+      "status": "done",
       "priority": "high",
       "module": "web",
       "design_doc": "docs/spec.md#3.1",
       "tests": {
-        "status": "missing",
+        "status": "passing",
         "files": ["tests/test_web.py"],
-        "notes": "approve flow, dashboard counters"
+        "notes": "8 tests: catalog 3 SKUs w/ ₹ prices, approve ₹5k/15m JWT verify, audit chain ok/broken, dashboard counters"
       },
       "subtasks": [],
-      "notes": "",
+      "notes": "form parsed via stdlib urllib.parse (no python-multipart dep); audit view verifies prev_hash chain per spec §4.4",
       "added": "2026-08-27",
-      "completed": null
+      "completed": "2026-08-27"
     },
     {
       "id": "F05",

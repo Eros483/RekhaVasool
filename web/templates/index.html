@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}FreshMart Catalog — RekhaVasool{% endblock %}
+{% block content %}
+<div class="card">
+  <h1>FreshMart Catalog <span class="muted">v{{ catalog.catalog_version }}</span></h1>
+  <table>
+    <tr><th>SKU</th><th>Name</th><th>Price</th><th>Noise cancelling</th><th>Desc</th></tr>
+    {% for sku in catalog.skus %}
+    <tr>
+      <td><code>{{ sku.sku }}</code></td>
+      <td>{{ sku.name }}</td>
+      <td>{{ sku.price | inr }}</td>
+      <td>{{ "yes" if sku.nc else "no" }}</td>
+      <td>{{ sku.desc }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  <p class="muted">Prices are canonical — set by the merchant, never by the agent (spec §1.4 SC4). JBL is deliberately over the ₹5k mandate.</p>
+</div>
+
+<div class="card">
+  <h2>Approve Mandate</h2>
+  <p class="muted">One tap approves a signed ₹5k / 15-minute mandate ({{ max_amount | inr }} max, allowlist: {{ catalog.merchant }}). Signed HMAC-SHA256 via <code>policy/mandate.py</code>.</p>
+  <form method="post" action="/approve">
+    <label>User ID: <input type="text" name="user_id" value="u_42" size="12"></label>
+    <button type="submit">Approve ₹5k / {{ minutes }}m mandate</button>
+  </form>
+</div>
+{% endblock %}

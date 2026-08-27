@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Mandate Approved — RekhaVasool{% endblock %}
+{% block content %}
+<div class="card">
+  <h1>Mandate Signed</h1>
+  <table>
+    <tr><th>id</th><td><code>{{ mandate.id }}</code></td></tr>
+    <tr><th>user_id</th><td>{{ mandate.user_id }}</td></tr>
+    <tr><th>max_amount</th><td>{{ mandate.max_amount | inr }}</td></tr>
+    <tr><th>currency</th><td>{{ mandate.currency }}</td></tr>
+    <tr><th>allowlist</th><td>{{ mandate.allowlist | join(", ") }}</td></tr>
+    <tr><th>expiry</th><td>{{ mandate.expiry }}</td></tr>
+    <tr><th>catalog_version</th><td>{{ mandate.catalog_version }}</td></tr>
+  </table>
+  <p class="muted">JWT (HS256) — verified by <code>policy.authorize</code> on every money action. <code>id</code> + <code>catalog_version</code> ride along in Payment Link notes (spec §4.2).</p>
+  <code>{{ token }}</code>
+  <p><a href="/">← back to catalog</a></p>
+</div>
+{% endblock %}

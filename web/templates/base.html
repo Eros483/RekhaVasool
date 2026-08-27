@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}RekhaVasool{% endblock %}</title>
+<style>
+  body { font-family: system-ui, sans-serif; margin: 0; background: #f6f7f9; color: #1a1a1a; }
+  nav { background: #0b3d91; padding: 10px 20px; display: flex; gap: 18px; }
+  nav a { color: #fff; text-decoration: none; font-weight: 600; }
+  main { max-width: 900px; margin: 24px auto; padding: 0 16px; }
+  .card { background: #fff; border: 1px solid #e2e5ea; border-radius: 8px; padding: 18px; margin-bottom: 18px; }
+  h1 { font-size: 1.4rem; } h2 { font-size: 1.1rem; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+  th, td { text-align: left; padding: 8px; border-bottom: 1px solid #eee; }
+  code { background: #f0f1f3; padding: 2px 6px; border-radius: 4px; word-break: break-all; }
+  .ok { color: #1a7f37; font-weight: 700; } .bad { color: #cf222e; font-weight: 700; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+  .stat { background: #fff; border: 1px solid #e2e5ea; border-radius: 8px; padding: 14px; text-align: center; }
+  .stat .num { font-size: 1.6rem; font-weight: 700; color: #0b3d91; }
+  .stat .lbl { color: #5a6472; font-size: 0.85rem; }
+  input[type=text], button { padding: 8px 12px; font-size: 1rem; border-radius: 6px; }
+  button { background: #0b3d91; color: #fff; border: 0; cursor: pointer; }
+  .muted { color: #5a6472; font-size: 0.85rem; }
+</style>
+</head>
+<body>
+<nav>
+  <a href="/">Catalog</a>
+  <a href="/audit">Audit</a>
+  <a href="/dashboard">Dashboard</a>
+</nav>
+<main>
+  {% block content %}{% endblock %}
+</main>
+</body>
+</html>
