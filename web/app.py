@@ -190,16 +190,20 @@ async def buy_route(request: Request):
 
 @app.get("/audit", response_class=HTMLResponse)
 def audit(request: Request):
-    return templates.TemplateResponse(
-        request=request, name="audit.html", context={"entries": read_audit()}
-    )
+    return _dashboard(request)
 
 
 @app.get("/dashboard", response_class=HTMLResponse)
 def dashboard(request: Request):
+    return _dashboard(request)
+
+
+def _dashboard(request: Request):
     stats = orch.dashboard_stats(store=get_store())
     return templates.TemplateResponse(
-        request=request, name="dashboard.html", context={"stats": stats}
+        request=request,
+        name="dashboard.html",
+        context={"stats": stats, "entries": read_audit()},
     )
 
 

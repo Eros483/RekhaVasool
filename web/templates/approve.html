@@ -13,5 +13,20 @@
     <button type="submit">Continue to shop →</button>
   </form>
 </div>
+
+<div class="card">
+  <h2>FreshMart Catalog</h2>
+  <table>
+    <tr><th>Product</th><th>Price</th><th>Noise cancelling</th><th>Details</th></tr>
+    {% for sku in catalog.skus %}
+    <tr>
+      <td><strong>{{ sku.name }}</strong></td>
+      <td>{{ sku.price | inr }}</td>
+      <td>{{ "Yes" if sku.nc else "No" }}</td>
+      <td>{{ sku.desc }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
 <p><a href="/">← start over</a></p>
 {% endblock %}

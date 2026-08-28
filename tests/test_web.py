@@ -11,7 +11,7 @@ from fastapi.testclient import TestClient
 
 import recovery.orchestrator as orch
 import web.app as web_app
-from policy.mandate import verify
+from policy.mandate import sign, verify
 from utils.config import settings
 
 JWT_RE = re.compile(r"[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+")
@@ -38,10 +38,13 @@ def audit(tmp_path, monkeypatch):
 
 
 def test_catalog_view_lists_three_skus(client):
-    r = client.get("/")
+    # catalog lives on the post-approve shop page
+    mandate = web_app.build_mandate()
+    token = sign(mandate, settings.mandate_secret)
+    r = client.post("/shop", data={"mandate_token": token})
     assert r.status_code == 200
     html = r.text
-    assert "FreshMart" in html
+    assert "FreshMart Catalog" in html
     assert "Sony WH-CH510" in html
     assert "₹4,999" in html  # 499900 paise
     assert "boAt Rockerz 450" in html

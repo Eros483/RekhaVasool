@@ -2,22 +2,7 @@
 {% block title %}FreshMart — RekhaVasool{% endblock %}
 {% block content %}
 <div class="card">
-  <h1>FreshMart Catalog</h1>
-  <table>
-    <tr><th>Product</th><th>Price</th><th>Noise cancelling</th><th>Details</th></tr>
-    {% for sku in catalog.skus %}
-    <tr>
-      <td><strong>{{ sku.name }}</strong></td>
-      <td>{{ sku.price | inr }}</td>
-      <td>{{ "Yes" if sku.nc else "No" }}</td>
-      <td>{{ sku.desc }}</td>
-    </tr>
-    {% endfor %}
-  </table>
-</div>
-
-<div class="card">
-  <h2>Set your spending limit</h2>
+  <h1>Set your spending limit</h1>
   <p class="muted">Approve a signed limit for FreshMart — the agent can only spend up to this.</p>
   <form method="post" action="/approve">
     <div style="margin-bottom:8px"><label>Your name: <input type="text" name="user_id" value="u_42" size="12"></label></div>
