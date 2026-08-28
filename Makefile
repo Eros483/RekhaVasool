@@ -1,22 +1,27 @@
-.PHONY: setup dev test style build clean harness help
+.PHONY: setup dev ngrok test style build clean harness help
 
 setup: ## sync deps (uv sync), create .env from .env.example if missing
 	uv sync --group dev
 	@test -f .env || cp .env.example .env
 	@echo "setup done"
 
-dev: ## boot everything: web :8000 + voice agent :7860 + both ngrok tunnels
-	@echo "== booting web (8000) + voice (7860) + ngrok =="
+dev: ## boot web :8000 + voice agent :7860 (ngrok is separate: make ngrok)
+	@echo "== booting web (8000) + voice (7860) =="
 	@(uv run uvicorn web.app:app --reload --port 8000 > /tmp/rv_web.log 2>&1 &)
 	@(uv run python voice/agent.py --transport twilio > /tmp/rv_voice.log 2>&1 &)
-	@-which ngrok >/dev/null 2>&1 && (ngrok http 8000 > /tmp/rv_ngrok8000.log 2>&1 &) || echo "ngrok not found — install for webhooks"
-	@-which ngrok >/dev/null 2>&1 && (ngrok http 7860 > /tmp/rv_ngrok7860.log 2>&1 &) || true
-	@sleep 5
-	@echo "== URLs =="
+	@sleep 4
+	@echo "== web: http://localhost:8000  |  voice logs: /tmp/rv_voice.log =="
+	@echo "tunnels: make ngrok  |  Ctrl+C stops web + voice"
+	@trap 'pkill -f "voice/agent.py"; pkill -f "uvicorn web.app"' INT; wait
+
+ngrok: ## spin up both tunnels (webhook :8000 + voice wss :7860)
+	@-which ngrok >/dev/null 2>&1 || (echo "ngrok not installed — get it from ngrok.com/download"; exit 1)
+	@(ngrok http 8000 > /tmp/rv_ngrok8000.log 2>&1 &)
+	@(ngrok http 7860 > /tmp/rv_ngrok7860.log 2>&1 &)
+	@sleep 4
+	@echo "== tunnels =="
 	@for port in 4040 4041; do curl -s http://127.0.0.1:$$port/api/tunnels 2>/dev/null | python3 -c "import json,sys; [print(t['public_url'],'->',t['config']['addr']) for t in json.load(sys.stdin)['tunnels']]" 2>/dev/null; done
-	@echo "== web: http://localhost:8000  |  voice agent: logs in /tmp/rv_voice.log =="
-	@echo "Ctrl+C stops everything (web + voice + ngrok)"
-	@trap 'pkill -f "voice/agent.py"; pkill -f "uvicorn web.app"; pkill -f "ngrok http"' INT; wait
+	@echo "== webhook: <8000-tunnel>/webhook  |  voice wss: <7860-tunnel>/ws (update VOICE_WSS_URL + TwiML bin) =="
 
 test: ## pytest tests/harness.py -v  (must show 20/20) + any unit tests
 	uv run pytest -v
