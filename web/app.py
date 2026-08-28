@@ -125,7 +125,7 @@ async def approve(request: Request):
     return templates.TemplateResponse(
         request=request,
         name="approve.html",
-        context={"token": token, "mandate": mandate},
+        context={"token": token, "mandate": mandate, "catalog": CATALOG},
     )
 
 
