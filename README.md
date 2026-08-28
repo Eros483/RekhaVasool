@@ -2,6 +2,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white" alt="Python" />
+  <img src="https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white" alt="FastAPI" />
   <img src="https://img.shields.io/badge/Razorpay-test%20mode-02042B" alt="Razorpay test mode" />
   <img src="https://img.shields.io/badge/code%20style-black-000000" alt="Black" />
   <img src="https://img.shields.io/badge/License-Apache%202.0-blue" alt="Apache 2.0" />
