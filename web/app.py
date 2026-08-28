@@ -43,16 +43,16 @@ templates.env.filters["inr"] = inr
 app = FastAPI(title="RekhaVasool")
 
 
-def build_mandate(user_id="u_42"):
-    """Spec §4.2 — signed downstream by policy.mandate.sign."""
+def build_mandate(user_id="u_42", max_amount_paise=MAX_MANDATE_PAISE, minutes=MANDATE_MINUTES):
+    """Spec §4.2 — signed downstream by policy.mandate.sign. Limit + duration editable."""
     now = datetime.now(UTC)
     return {
         "id": "mand_" + secrets.token_hex(2),
         "user_id": user_id,
-        "max_amount": MAX_MANDATE_PAISE,
+        "max_amount": max_amount_paise,
         "currency": "INR",
         "allowlist": [CATALOG["merchant"]],
-        "expiry": (now + timedelta(minutes=MANDATE_MINUTES)).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "expiry": (now + timedelta(minutes=minutes)).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "iat": int(now.timestamp()),
         "catalog_version": CATALOG["catalog_version"],
     }
@@ -100,10 +100,28 @@ def index(request: Request):
 async def approve(request: Request):
     # stdlib form parse — urlencoded only, avoids python-multipart dep
     body = (await request.body()).decode()
-    user_id = parse_qs(body).get("user_id", ["u_42"])[0]
-    mandate = build_mandate(user_id)
+    qs = parse_qs(body)
+    user_id = qs.get("user_id", ["u_42"])[0]
+    # editable limit (₹) + duration (minutes); fall back to defaults
+    try:
+        amount_rs = float(qs.get("max_amount", [""])[0]) if qs.get("max_amount", [""])[0] else None
+    except ValueError:
+        amount_rs = None
+    max_amount_paise = int(amount_rs * 100) if amount_rs else MAX_MANDATE_PAISE
+    try:
+        minutes = int(qs.get("minutes", [""])[0]) if qs.get("minutes", [""])[0] else None
+    except ValueError:
+        minutes = None
+    minutes = minutes or MANDATE_MINUTES
+    mandate = build_mandate(user_id, max_amount_paise, minutes)
     token = sign(mandate, settings.mandate_secret)
-    logger.info("mandate approved user_id=%s mandate_id=%s", user_id, mandate["id"])
+    logger.info(
+        "mandate approved user_id=%s mandate_id=%s max=%s min=%s",
+        user_id,
+        mandate["id"],
+        max_amount_paise,
+        minutes,
+    )
     return templates.TemplateResponse(
         request=request,
         name="approve.html",

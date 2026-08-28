@@ -14,25 +14,16 @@
     </tr>
     {% endfor %}
   </table>
-  <p class="muted">Tip: the JBL is over the ₹5k budget — the guard will block it.</p>
 </div>
 
 <div class="card">
-  <h2>1 · Set your spending limit</h2>
-  <p class="muted">One tap approves a ₹5,000 limit for FreshMart, valid for 15 minutes.</p>
+  <h2>Set your spending limit</h2>
+  <p class="muted">Approve a signed limit for FreshMart — the agent can only spend up to this.</p>
   <form method="post" action="/approve">
-    <label>Your name: <input type="text" name="user_id" value="u_42" size="12"></label>
-    <button type="submit">Approve ₹5,000 / 15 min</button>
-  </form>
-</div>
-
-<div class="card">
-  <h2>2 · Tell the agent what to buy</h2>
-  <p class="muted">Just describe it — the agent picks the product, the guard checks the money.</p>
-  <form method="post" action="/buy">
-    <div style="margin-bottom:8px"><label>You say: <input type="text" name="user_text" value="headphones under 5k NC" size="40"></label></div>
-    <div style="margin-bottom:8px"><label>Your approval token: <input type="text" name="mandate_token" placeholder="paste from step 1" size="60"></label></div>
-    <button type="submit">Buy</button>
+    <div style="margin-bottom:8px"><label>Your name: <input type="text" name="user_id" value="u_42" size="12"></label></div>
+    <div style="margin-bottom:8px"><label>Limit (₹): <input type="number" name="max_amount" value="5000" min="100" step="100" size="10"></label></div>
+    <div style="margin-bottom:8px"><label>Valid for (minutes): <input type="number" name="minutes" value="15" min="1" size="6"></label></div>
+    <button type="submit">Approve & continue</button>
   </form>
 </div>
 {% endblock %}
