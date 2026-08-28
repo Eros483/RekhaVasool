@@ -2,7 +2,7 @@
 {% block title %}Audit — RekhaVasool{% endblock %}
 {% block content %}
 <div class="card">
-  <h1>Audit Trail <span class="muted">audit.jsonl — append-only, hash-chained</span></h1>
+  <h1>Audit Trail</h1>
   {% if not entries %}
     <p>No audit entries yet.</p>
   {% else %}
@@ -22,7 +22,7 @@
       </tr>
       {% endfor %}
     </table>
-    <p class="muted">Each line's <code>prev_hash = sha256(previous raw line)</code> — a broken link means tampering.</p>
+    <p class="muted">Every money decision is logged here — nothing is silently approved or denied.</p>
   {% endif %}
 </div>
 {% endblock %}

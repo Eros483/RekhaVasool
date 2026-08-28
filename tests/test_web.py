@@ -41,7 +41,7 @@ def test_catalog_view_lists_three_skus(client):
     r = client.get("/")
     assert r.status_code == 200
     html = r.text
-    assert "freshmart" in html
+    assert "FreshMart" in html
     assert "Sony WH-CH510" in html
     assert "₹4,999" in html  # 499900 paise
     assert "boAt Rockerz 450" in html
@@ -185,9 +185,9 @@ def test_dashboard_shows_recovery_counters(client, db_path, monkeypatch, fake_rz
 
     r = client.get("/dashboard")
     assert r.status_code == 200
-    assert "Total failed" in r.text
+    assert "Payments failed" in r.text
     assert "Retried" in r.text
-    assert "WA sent" in r.text
+    assert "WhatsApp nudges" in r.text
     assert "Recovered" in r.text
     assert "₹6,998" in r.text  # 499900 + 199900 paise recovered
 

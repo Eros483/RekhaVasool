@@ -48,6 +48,13 @@ class RecoveryStore:
         self.conn = sqlite3.connect(path)
         self.conn.row_factory = sqlite3.Row
         self.conn.executescript(_SCHEMA)
+        # migrate older DBs (CREATE IF NOT EXISTS won't ALTER existing tables)
+        for col in ("voice_sent",):
+            try:
+                self.conn.execute(f"ALTER TABLE recovery_attempts ADD COLUMN {col} BOOL DEFAULT 0")
+                self.conn.commit()
+            except sqlite3.OperationalError:
+                pass  # column already exists
         self.conn.commit()
 
     def rows(self, original_payment_id):
@@ -229,9 +236,9 @@ def handle_payment_failed(
 
 def dial_voice(store, original_payment_id):
     """Best-effort outbound voice alongside WA — seam, monkeypatched in tests."""
-    if store.voice_sent_total(original_payment_id) >= MAX_VOICE_SENT:
-        return False
     try:
+        if store.voice_sent_total(original_payment_id) >= MAX_VOICE_SENT:
+            return False
         from voice.agent import dial_out
 
         result = dial_out()
@@ -331,11 +338,13 @@ def dashboard_stats(store=None):
         )
     )
     wa_sent = sum(1 for o in originals if store.wa_sent_total(o) > 0)
+    voice_sent = sum(1 for o in originals if store.voice_sent_total(o) > 0)
     recovered_rows = [r for r in all_rows if r["status"] == "recovered"]
     return {
         "total_failed": len(originals),
         "retried": retried,
         "wa_sent": wa_sent,
+        "voice_sent": voice_sent,
         "recovered": len(recovered_rows),
         "amount_recovered_paise": sum(r["amount_paise"] for r in recovered_rows),
     }
