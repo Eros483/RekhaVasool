@@ -1,12 +1,12 @@
 <h1 align="center">RekhaVasool</h1>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Track-01%20Agentic%20Commerce%20%2B%2003%20Recovery-0ea5e9?style=for-the-badge" alt="Tracks" />
-  <img src="https://img.shields.io/badge/Python-3.11%2B-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
-  <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI" />
-  <img src="https://img.shields.io/badge/Razorpay-test--mode-02042B?style=for-the-badge" alt="Razorpay" />
-  <img src="https://img.shields.io/badge/Gemini-2.5%20Flash-4285F4?style=for-the-badge&logo=googlegemini&logoColor=white" alt="Gemini" />
+  <img src="https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white" alt="Python" />
+  <img src="https://img.shields.io/badge/Razorpay-test%20mode-02042B" alt="Razorpay test mode" />
+  <img src="https://img.shields.io/badge/code%20style-black-000000" alt="Black" />
+  <img src="https://img.shields.io/badge/License-Apache%202.0-blue" alt="Apache 2.0" />
 </p>
+
 
 <p align="center">
   <b>AI can shop for you — but who stops it from overspending or getting tricked?</b><br/>
