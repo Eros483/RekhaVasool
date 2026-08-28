@@ -129,6 +129,18 @@ async def approve(request: Request):
     )
 
 
+@app.post("/shop", response_class=HTMLResponse)
+async def shop(request: Request):
+    """Post-approve landing: catalog + buy form, mandate token rides hidden."""
+    body = (await request.body()).decode()
+    token = parse_qs(body).get("mandate_token", [""])[0]
+    if not token:
+        return HTMLResponse("missing mandate token", status_code=400)
+    return templates.TemplateResponse(
+        request=request, name="shop.html", context={"token": token, "catalog": CATALOG}
+    )
+
+
 @app.post("/buy", response_class=HTMLResponse)
 async def buy_route(request: Request):
     """Happy path + attack demo: user_text + mandate_token → buyer → authorize → Payment Link."""

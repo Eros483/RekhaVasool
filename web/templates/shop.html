@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Shop — RekhaVasool{% endblock %}
+{% block content %}
+<div class="card">
+  <h1>Catalog</h1>
+  <table>
+    <tr><th>Product</th><th>Price</th><th>Noise cancelling</th><th>Details</th></tr>
+    {% for sku in catalog.skus %}
+    <tr>
+      <td><strong>{{ sku.name }}</strong></td>
+      <td>{{ sku.price | inr }}</td>
+      <td>{{ "Yes" if sku.nc else "No" }}</td>
+      <td>{{ sku.desc }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+
+<div class="card">
+  <h2>Tell the agent what to buy</h2>
+  <p class="muted">Just describe it — the agent picks the product, the guard checks the money.</p>
+  <form method="post" action="/buy">
+    <div style="margin-bottom:8px"><label>You say: <input type="text" name="user_text" placeholder="e.g. headphones under 5k NC" size="45"></label></div>
+    <input type="hidden" name="mandate_token" value="{{ token }}">
+    <button type="submit">Buy</button>
+  </form>
+</div>
+
+<p><a href="/">← start over</a> · <a href="/dashboard">dashboard</a></p>
+{% endblock %}
