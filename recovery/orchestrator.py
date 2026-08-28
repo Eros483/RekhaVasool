@@ -9,12 +9,16 @@ import sqlite3
 import time
 
 from utils.config import settings
+from utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 RECOVERY_CONTACT = (
     settings.wa_to or "+91-9560452773"
 )  # whitelisted test number (spec §6) — autoconfigured from WA_TO env
 MAX_ATTEMPTS = 2
 MAX_WA_SENT = 1
+MAX_VOICE_SENT = 1
 RETRY_DELAY_SECONDS = 45
 LINK_EXPIRE_MINUTES = 16  # spec says 15m; Razorpay requires >15m
 RECOVERY_DB = "recovery.db"
@@ -27,6 +31,7 @@ CREATE TABLE IF NOT EXISTS recovery_attempts (
   error_code TEXT,
   attempts INT DEFAULT 0,
   wa_sent BOOL DEFAULT 0,
+  voice_sent BOOL DEFAULT 0,
   status TEXT,
   stop_requested BOOL DEFAULT 0,
   wa_to TEXT,
@@ -64,6 +69,9 @@ class RecoveryStore:
 
     def wa_sent_total(self, original_payment_id):
         return sum(1 for r in self.rows(original_payment_id) if r["wa_sent"])
+
+    def voice_sent_total(self, original_payment_id):
+        return sum(1 for r in self.rows(original_payment_id) if r["voice_sent"])
 
     def stop_requested(self, original_payment_id):
         return any(r["stop_requested"] for r in self.rows(original_payment_id))
@@ -214,7 +222,30 @@ def handle_payment_failed(
 
     if outcome == "wa_sent" and not _maybe_send_wa(store, original_payment_id, amount_paise):
         outcome = "link_only"  # WA already capped
+    # fire voice alongside WA — instant outbound call after payment failed (voice ≤ 1)
+    dial_voice(store, original_payment_id)
     return {"decision": outcome}
+
+
+def dial_voice(store, original_payment_id):
+    """Best-effort outbound voice alongside WA — seam, monkeypatched in tests."""
+    if store.voice_sent_total(original_payment_id) >= MAX_VOICE_SENT:
+        return False
+    try:
+        from voice.agent import dial_out
+
+        result = dial_out()
+        if result:
+            store.conn.execute(
+                "UPDATE recovery_attempts SET voice_sent=1 "
+                "WHERE original_payment_id=? AND voice_sent=0",
+                (original_payment_id,),
+            )
+            store.conn.commit()
+            return True
+    except Exception as e:  # noqa: BLE001 — voice is best-effort, never blocks recovery
+        logger.warning("voice dial failed: %s", e)
+    return False
 
 
 def _maybe_send_wa(store, original, amount_paise):

@@ -2,11 +2,21 @@
 
 setup: ## sync deps (uv sync), create .env from .env.example if missing
 	uv sync --group dev
-	@test -f .env || cp .env.example .env && echo ".env created from .env.example"
+	@test -f .env || cp .env.example .env
 	@echo "setup done"
 
-dev: ## uvicorn web/app.py --reload (single server; no frontend split)
-	uv run uvicorn web.app:app --reload --port 8000
+dev: ## boot everything: web :8000 + voice agent :7860 + both ngrok tunnels
+	@echo "== booting web (8000) + voice (7860) + ngrok =="
+	@(uv run uvicorn web.app:app --reload --port 8000 > /tmp/rv_web.log 2>&1 &)
+	@(uv run python voice/agent.py --transport twilio > /tmp/rv_voice.log 2>&1 &)
+	@-which ngrok >/dev/null 2>&1 && (ngrok http 8000 > /tmp/rv_ngrok8000.log 2>&1 &) || echo "ngrok not found — install for webhooks"
+	@-which ngrok >/dev/null 2>&1 && (ngrok http 7860 > /tmp/rv_ngrok7860.log 2>&1 &) || true
+	@sleep 5
+	@echo "== URLs =="
+	@for port in 4040 4041; do curl -s http://127.0.0.1:$$port/api/tunnels 2>/dev/null | python3 -c "import json,sys; [print(t['public_url'],'->',t['config']['addr']) for t in json.load(sys.stdin)['tunnels']]" 2>/dev/null; done
+	@echo "== web: http://localhost:8000  |  voice agent: logs in /tmp/rv_voice.log =="
+	@echo "Ctrl+C stops everything (web + voice + ngrok)"
+	@trap 'pkill -f "voice/agent.py"; pkill -f "uvicorn web.app"; pkill -f "ngrok http"' INT; wait
 
 test: ## pytest tests/harness.py -v  (must show 20/20) + any unit tests
 	uv run pytest -v

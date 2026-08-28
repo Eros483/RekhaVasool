@@ -63,9 +63,21 @@ async def bot(runner_args: RunnerArguments):
     context = LLMContext(messages)
     context_aggregator = LLMContextAggregatorPair(context)
 
-    pipeline = Pipeline([transport.input(), stt, context_aggregator.user(), llm, tts, transport.output(), context_aggregator.assistant()])
+    pipeline = Pipeline(
+        [
+            transport.input(),
+            stt,
+            context_aggregator.user(),
+            llm,
+            tts,
+            transport.output(),
+            context_aggregator.assistant(),
+        ]
+    )
 
-    task = PipelineTask(pipeline, params=PipelineParams(audio_in_sample_rate=8000, audio_out_sample_rate=8000))
+    task = PipelineTask(
+        pipeline, params=PipelineParams(audio_in_sample_rate=8000, audio_out_sample_rate=8000)
+    )
 
     @transport.event_handler("on_client_connected")
     async def on_client_connected(transport, client):
@@ -80,6 +92,37 @@ async def bot(runner_args: RunnerArguments):
 
     runner = PipelineRunner(handle_sigint=runner_args.handle_sigint)
     await runner.run(task)
+
+
+def dial_out(to: str | None = None, timeout: float = 30):
+    """Outbound dial — POST Twilio Calls.json with Stream to VOICE_WSS_URL.
+
+    Requires settings.voice_wss_url (the ngrok 7860 tunnel → wss://…/ws).
+    No-op (returns None) if not configured — avoids surprise dials in tests/localhost.
+    """
+    import httpx
+
+    from utils.config import settings as s
+
+    to = (to or s.wa_to).replace("-", "").replace(" ", "")
+    if not to.startswith("+"):
+        to = "+" + to.lstrip("+")
+    if not s.voice_wss_url:
+        logger.info("voice_wss_url not set — skipping outbound voice dial")
+        return None
+    if not (s.twilio_account_sid and s.twilio_auth_token and s.twilio_phone_number):
+        logger.info("twilio creds missing — skipping outbound voice dial")
+        return None
+    url = f"https://api.twilio.com/2010-04-01/Accounts/{s.twilio_account_sid}/Calls.json"
+    twiml = f'<Response><Connect><Stream url="{s.voice_wss_url}" /></Connect></Response>'
+    r = httpx.post(
+        url,
+        data={"From": s.twilio_phone_number, "To": to, "Twiml": twiml},
+        auth=(s.twilio_account_sid, s.twilio_auth_token),
+        timeout=timeout,
+    )
+    r.raise_for_status()
+    return r.json()
 
 
 if __name__ == "__main__":

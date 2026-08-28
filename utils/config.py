@@ -18,6 +18,7 @@ class Settings(BaseSettings):
     twilio_auth_token: str = ""
     twilio_phone_number: str = ""
     sarvam_api_key: str = ""
+    voice_wss_url: str = ""
 
 
 settings = Settings()
